@@ -96,3 +96,13 @@ class Detector():
         if self.verbose:
             print(f"--- %s seconds for saving {i} detections---" % (time.time() - start_time))
         
+        
+    def save_pic_with_detections(self, img, detections, title):
+        for i, (x1, y1, x2, y2, conf, cls_conf, cls_pred) in enumerate(detections):
+            box_w = x2 - x1
+            box_h = y2 - y1
+            if 0.45 * box_h > box_w > 10:
+                pedestrian = img[int(y1):int(y2), int(x1):int(x2), :]
+                filename = f'{self.output_dir}/{title}.png'
+                cv2.rectangle(img, (x1,y1), (x2,y2), (0, 102, 255), 1)
+        cv2.imwrite(filename, img)

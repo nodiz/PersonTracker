@@ -41,9 +41,9 @@ if __name__ == "__main__":
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         detections = detector.detect(img)
         detector.save_detections(img, detections)
-        # reid.evaluate_query(work_dir)  # implementation not finished
+        #detector.save_pic_with_detections(img, detections, f"{framenr}")
         
-        break
+        # reid.evaluate_query(work_dir)  # implementation not finished
     
     videoframe.release()
     cv2.destroyAllWindows()
