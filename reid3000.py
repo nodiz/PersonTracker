@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, time
 import torch
 import torchvision.transforms as T
 from torch.utils.data import Dataset
@@ -10,12 +10,14 @@ from reidLib.modeling.baseline import Baseline
 
 class Reid:
     def __init__(self,
-                 baseline_path='reidLib/modeling',
+                 baseline_path='reidLib/',
                  backbone="WeightsReid/resnet50-19c8e357.pth",
                  num_classes=1041,
                  query_path=None):
         """init the reid"""
+        self.baseline_path = baseline_path
         sys.path.append(baseline_path)
+        sys.path.append(os.path.join(baseline_path,'modeling'))
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = Baseline(num_classes, 1, backbone, 'bnneck', 'after', 'resnet50', 'imageNet')
         self.model.eval()
@@ -104,7 +106,7 @@ class Reid:
                 """
                 
                 raise NotImplementedError
-
+        
 
 class ReidDataset(Dataset):
     """Image Person ReID Dataset"""
