@@ -29,7 +29,7 @@ class Detector():
         self.verbose = verbose
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-        weights = self.y_path("weights/yolov3_ckpt_current_50.pth")
+        weights = "weights/det/yolov3_ckpt_current_50.pth"
         model_def = self.y_path("config/yolov3-custom.cfg")
         self.model = Darknet(model_def, img_size=416).to(self.device)
         self.model.load_state_dict(torch.load(weights, map_location=self.device))

@@ -8,7 +8,7 @@ from dr_utils import clean_folder
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--videoname", type=str, default='VideoToTrack/MOT16-10-raw.webm', help="videoname")
+    parser.add_argument("--videoname", type=str, default='vids/MOT16-10-raw.webm', help="videoname")
     parser.add_argument("--outputdir", type=str, default='output', help="outputdir")
     parser.add_argument("--workdir", type=str, default='temp', help="outputdir")
     parser.add_argument("--yolopath", type=str, default='detLib', help="outputdir")

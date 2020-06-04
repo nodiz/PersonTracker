@@ -14,7 +14,7 @@ from reid_utils import *
 class Reid:
     def __init__(self,
                  baseline_path='reidLib/',
-                 backbone="WeightsReid/resnet50-19c8e357.pth",
+                 backbone="weights/reid//resnet50-19c8e357.pth",
                  num_classes=1041,
                  query_path=None,
                  verbose=False,
@@ -38,7 +38,7 @@ class Reid:
         self.verbose = verbose
     
     def load_param(self,
-                   trained_path='WeightsReid/resnet50_model_100.pth'):
+                   trained_path='weights/reid/resnet50_model_100.pth'):
         """load the parameters"""
         
         param_dict = torch.load(trained_path, map_location=self.device).state_dict()
