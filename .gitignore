@@ -122,3 +122,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+temp/
+reidLib/
+detLib/
+weigths/
+WeightsReid/

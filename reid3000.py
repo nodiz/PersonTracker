@@ -38,7 +38,7 @@ class Reid:
         self.verbose = verbose
     
     def load_param(self,
-                   trained_path='WeightsReid/WeightFab/center/resnet50_model_100.pth'):
+                   trained_path='WeightsReid/resnet50_model_100.pth'):
         """load the parameters"""
         
         param_dict = torch.load(trained_path, map_location=self.device).state_dict()

@@ -1,13 +1,13 @@
-PersonTracking
+#PersonTracker
 
 
-How to:
+##How to:
 
--clone nodiz:yolo -> detLib
--clone nodiz:reid -> reidLib
+*clone nodiz:yolo -> detLib
+*clone nodiz:reid -> reidLib
 
--copy weights 
+*copy weights (yolo -> detLib/weights/chkpt50.pth, reid->weights/resnet backbone+model) 
 
-launch pippo3000.py
+*launch pippo3000.py
 
-have fun
+*###have fun
