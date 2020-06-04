@@ -100,7 +100,8 @@ class Reid:
             # Calculating feature for query
             start_time = time.time()
             
-            qf = self.model(query[:1,:,:,:])  # (bs, 2048)
+            qf = self.model(query)  # (bs, 2048)
+            #qf = self.model(query[:1,:,:,:])  # (bs, 2048)
             
             if self.verbose:
                 print(f"--- %s seconds for {query.shape[0]} pics---" % (time.time() - start_time))

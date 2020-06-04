@@ -51,7 +51,7 @@ class Detector():
         if self.resize_size != 0:
             img = resize(img, self.resize_size)
         img.unsqueeze_(0)  # manually add batch axis
-        
+        img = img.to(self.device) 
         with torch.no_grad():
             start_time = time.time()
             detections = self.model(img)
