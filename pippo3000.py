@@ -25,7 +25,7 @@ if __name__ == "__main__":
     from detect3000 import Detector
     detector = Detector(yolo_path=opt.yolopath, output_dir=work_dir, verbose=True)
     from reid3000 import Reid
-    reid = Reid()
+    reid = Reid(verbose=True)
     
     videoframe = cv2.VideoCapture(videoname)
     framenr=0
@@ -40,10 +40,10 @@ if __name__ == "__main__":
     
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         detections = detector.detect(img)
-        detector.save_detections(img, detections)
-        #detector.save_pic_with_detections(img, detections, f"{framenr}")
+        det_list, crop_list = detector.get_detections(img, detections)
+        det_ids = reid.evaluate_query(crop_list)
+        detector.save_pic_with_detections(img, detections, det_ids)
         
-        # reid.evaluate_query(work_dir)  # implementation not finished
-    
+        break
     videoframe.release()
     cv2.destroyAllWindows()

@@ -10,6 +10,8 @@ from detLib.utils.utils import rescale_boxes, non_max_suppression
 
 from dr_utils import clean_folder
 
+color_list = [(222,98,61),(140,82,148),(76,67,149),(23,159,149),(131,204,72),(242,190,69)]
+le = len(color_list)
 
 class Detector():
     def __init__(self, yolo_path="detLib/",
@@ -65,7 +67,7 @@ class Detector():
     
     def get_detections(self, img, detections):
         """get list of detected images"""
-        
+        det_list = []
         crop_list = []
         
         for i, (x1, y1, x2, y2, conf, cls_conf, cls_pred) in enumerate(detections):
@@ -73,11 +75,12 @@ class Detector():
             box_h = y2 - y1
         
             if 0.45 * box_h > box_w > 10:
+                det_list.append([x1,y1,x2,y2])
                 crop_list.append(img[int(y1):int(y2), int(x1):int(x2), :])
             
-            return crop_list
+        return det_list, crop_list
 
-    def save_detections(self, img, detections, keep_folder=False):
+    def save_detections_crop(self, img, detections, keep_folder=False):
         """save cropped peoples"""
         
         if not keep_folder:
@@ -96,8 +99,8 @@ class Detector():
         if self.verbose:
             print(f"--- %s seconds for saving {i} detections---" % (time.time() - start_time))
         
-        
-    def save_pic_with_detections(self, img, detections, title):
+    def save_pic_with_detections(self, img, detections, ids=None, title="image"):
+        idx = 0
         for i, (x1, y1, x2, y2, conf, cls_conf, cls_pred) in enumerate(detections):
             box_w = x2 - x1
             box_h = y2 - y1
@@ -105,4 +108,12 @@ class Detector():
                 pedestrian = img[int(y1):int(y2), int(x1):int(x2), :]
                 filename = f'{self.output_dir}/{title}.png'
                 cv2.rectangle(img, (x1,y1), (x2,y2), (0, 102, 255), 1)
+                if ids!=None:
+                    col = color_list[idx%le]
+                    cv2.putText(img, f'{ids[idx]}', (x1, y1), cv2.FONT_HERSHEY_PLAIN, 1, col, 1)
+                    cv2.rectangle(img, (x1, y1), (x2, y2), col, 1)
+                    idx+=1
+                else:
+                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 102, 255), 1)
+
         cv2.imwrite(filename, img)
