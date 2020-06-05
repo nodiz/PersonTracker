@@ -65,12 +65,23 @@ class Detector():
 
         return detections
     
+    def clip(self, taille, *args):
+        l = []
+        for x in args:
+            x = min(max(x, 0.01), taille-0.01)
+            l.append(torch.tensor(x))
+        return l
+    
     def get_detections(self, img, detections):
         """get list of detected images"""
         det_list = []
         crop_list = []
         
+        shape = img.shape
+        
         for i, (x1, y1, x2, y2, conf, cls_conf, cls_pred) in enumerate(detections):
+            (x1, x2), (y1, y2) = self.clip(shape[1], x1, x2), self.clip(shape[0], y1, y2)
+            
             box_w = x2 - x1
             box_h = y2 - y1
         

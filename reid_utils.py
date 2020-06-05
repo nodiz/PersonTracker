@@ -9,7 +9,7 @@ class Gallery:
     def __init__(self, save_path=None, **kwargs):
         self.lst = []
         self.not_seen_param = kwargs.pop("not_seen_param", 50)
-        self.limit = kwargs.pop("limit", 1000)
+        self.limit = kwargs.pop("limit", 50)
         self.idx = 0
         
         self.save_path = save_path

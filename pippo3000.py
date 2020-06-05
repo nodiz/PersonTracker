@@ -16,6 +16,7 @@ if __name__ == "__main__":
     parser.add_argument("--yolopath", type=str, default='detLib', help="outputdir")
     parser.add_argument("--reidpath", type=str, default='reidLib', help="outputdir")
     parser.add_argument("--threshold", type=float, default=1, help="threshold for new identity")
+    parser.add_argument("--imgsize", type=float, default=960, help="imagesize for detection")
 
     opt = parser.parse_args()
     videoname = opt.videoname
@@ -28,7 +29,7 @@ if __name__ == "__main__":
 
     sys.path.append(opt.yolopath)
     from detect3000 import Detector
-    detector = Detector(yolo_path=opt.yolopath, output_dir=work_dir, verbose=False)
+    detector = Detector(yolo_path=opt.yolopath, resize_size=opt.imgsize, output_dir=work_dir, verbose=False)
     from reid3000 import Reid
     reid = Reid(save_path=reid_dir, threshold=opt.threshold, verbose=False)
     

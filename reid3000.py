@@ -32,7 +32,7 @@ class Reid:
         self.model.eval()
         self.model.to(self.device)
         
-        self.load_param()  # TODO remove warnings
+        self.load_param()
         self.load_transform()
         
         self.gallery = Gallery(save_path)  # if savepath!=none we will create folder for identities (nice++)
@@ -87,10 +87,6 @@ class Reid:
         for batch in demo_loader:
             return batch.to(self.device)
     
-    def get_gallery(self):
-        """ get query images"""
-        return [im['features'] for im in self.gallery], [im['id'] for im in self.gallery]
-    
     def get_query_from_list(self, list):
         t_list = []
         for img in list:
@@ -115,8 +111,8 @@ class Reid:
             start_time = time.time()
             
             qf = self.model(query)  # (bs, 2048)
-            #qf = self.model(query[:1,:,:,:])  # (bs, 2048)
-            qf = torch.nn.functional.normalize(qf, dim=1, p=2)  # probably dangerous to normalize since we have few elemtns, better to do it together with the gallery but more comexp
+
+            qf = torch.nn.functional.normalize(qf, dim=1, p=2)  # TODO probably dangerous to normalize since we have few elemtns, better to do it together with the gallery but more comexp
 
             if self.verbose:
                 print(f"--- ReId: %s seconds for {qf.shape[0]}-{query.shape[0]} pics---" % (time.time() - start_time))
