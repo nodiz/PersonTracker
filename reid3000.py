@@ -162,4 +162,7 @@ class Reid:
             #  desactivate old values
             self.gallery.step()
             
+            if self.verbose:
+                print(f"--- Ass: %s seconds for g{n}-q{m} pics---" % (time.time() - start_time))
+            
             return query_idx
