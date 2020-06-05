@@ -128,3 +128,13 @@ reidLib/
 detLib/
 weigths/
 WeightsReid/
+
+.idea/
+
+vids/
+
+.DS_Store
+
+VideoPersonTracking.ipynb
+
+weights/
