@@ -123,18 +123,16 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+.idea/
+.DS_Store
+
 temp/
 reidLib/
 detLib/
-weigths/
-WeightsReid/
+weights/
+pippo/
 
-.idea/
+
+
 
 vids/
-
-.DS_Store
-
-VideoPersonTracking.ipynb
-
-weights/

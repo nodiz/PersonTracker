@@ -97,7 +97,7 @@ class Detector():
                 cv2.imwrite(filename, pedestrian)
     
         if self.verbose:
-            print(f"--- %s seconds for saving {i} detections---" % (time.time() - start_time))
+            print(f"--- det %s seconds for saving {i} detections---" % (time.time() - start_time))
         
     def save_pic_with_detections(self, img, detections, ids=None, title="image"):
         idx = 0

@@ -3,6 +3,7 @@ import torch
 import torchvision.transforms as T
 from PIL import Image
 import numpy as np
+from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import time
 
@@ -17,7 +18,6 @@ class Reid:
                  backbone="weights/reid//resnet50-19c8e357.pth",
                  num_classes=1041,
                  threshold=0.5,
-                 query_path=None,
                  save_path=None,
                  verbose=False,
                  **kwargs):
@@ -103,11 +103,13 @@ class Reid:
     def evaluate_query(self, query):
         """evluate query with in-cache gallery"""
         with torch.no_grad():
-            if type(query)==list:
-                if self.save_path is not None:
-                    query_pics = [Image.fromarray(img) for img in query]
+            if query == []:  # no reid needed
+                return []
+            
+            if self.save_path is not None:
+                query_pics = [Image.fromarray(img) for img in query]
     
-                query = self.get_query_from_list(query)
+            query = self.get_query_from_list(query)
                 
             # Calculating feature for query
             start_time = time.time()
@@ -147,8 +149,9 @@ class Reid:
                 if distmat[idx] == np.inf:
                     break  # no more association possible
                 else:  # make association
-                    query_idx[idx[1]] = gf_id[idx[0]]
-                    
+                    query_idx[idx[0]] = gf_id[idx[1]]
+                    self.gallery.update(gf_id[idx[1]], qf[idx[0]]) if self.save_path is None else self.gallery.update(gf_id[idx[1]], qf[idx[0]])
+
                     # deactivate element
                     distmat[idx[0], :] = np.inf
                     distmat[:, idx[1]] = np.inf
@@ -166,3 +169,23 @@ class Reid:
                 print(f"--- Ass: %s seconds for g{n}-q{m} pics---" % (time.time() - start_time))
             
             return query_idx
+
+
+class ReidDataset(Dataset):
+    """Image Person ReID Dataset"""
+    
+    def __init__(self, dataset, transform=None):
+        self.dataset = dataset
+        self.transform = transform
+    
+    def __len__(self):
+        return len(self.dataset)
+    
+    def __getitem__(self, index):
+        img_path = self.dataset[index]
+        img = Image.open(img_path).convert('RGB')
+        
+        if self.transform is not None:
+            img = self.transform(img)
+        
+        return img
