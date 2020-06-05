@@ -9,11 +9,20 @@ import cv2
 def clean_folder(folder_name):
     try:
         shutil.rmtree(folder_name)
-    except OSError as e:
+    except OSError:
         pass
     except TypeError:
         return
     os.makedirs(folder_name, exist_ok=True)
+
+
+def clear_folder(folder_name):
+    try:
+        shutil.rmtree(folder_name)
+    except OSError as e:
+        pass
+    except TypeError:
+        return
 
 
 def save_video(folder_in, folder_out, filename="video"):

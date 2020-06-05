@@ -1,5 +1,6 @@
-import torch
 import os
+
+import torch
 
 from dr_utils import clean_folder
 
@@ -43,7 +44,7 @@ class Gallery:
         # delete unactive elements if too many
         if len(self) > self.limit:
             self.purge()
-            
+        
         return self.idx - 1
     
     def update(self, idx, features, img=None):
