@@ -16,6 +16,10 @@ def clean_folder(folder_name):
     os.makedirs(folder_name, exist_ok=True)
 
 
+def make_folder(folder_name):
+    os.makedirs(folder_name, exist_ok=True)
+
+
 def clear_folder(folder_name):
     try:
         shutil.rmtree(folder_name)

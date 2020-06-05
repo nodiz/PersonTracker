@@ -1,30 +1,36 @@
 import argparse
+import os.path
 import sys
 import time
 
 import cv2
 
-from dr_utils import clean_folder, clear_folder, save_video
+from dr_utils import clean_folder, clear_folder, make_folder, save_video
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--videoname", type=str, default='vids/MOT16-10-raw.webm', help="input video")
+    
+    # interesting to change
+    parser.add_argument("--videoin", type=str, default='MOT16-10-raw.webm', help="input video (in vids/ folder)")
+    parser.add_argument("--threshold", type=float, default=3, help="threshold for adding new identity")
+    parser.add_argument("--imgsize", type=int, default=960, help="imagesize for detection")
+    parser.add_argument("--detconf", type=float, default=0.9, help="required condifence for detection")
+    # usually default
+    parser.add_argument("--indir", type=str, default='vids', help="input video directory")
     parser.add_argument("--outname", type=str, default='output.avi', help="name of output video")
-    parser.add_argument("--outputdir", type=str, default='output', help="output video folder")
+    parser.add_argument("--outdir", type=str, default='output', help="output video folder")
     parser.add_argument("--reiddir", type=str, default="", help="msmt-like detection folder")
     parser.add_argument("--workdir", type=str, default='temp', help="frames folder")
-    parser.add_argument("--threshold", type=float, default=1, help="threshold for new identity")
-    parser.add_argument("--detconf", type=float, default=0.9, help="imagesize for detection")
-    parser.add_argument("--imgsize", type=int, default=960, help="imagesize for detection")
     parser.add_argument("--yolopath", type=str, default='detLib', help="outputdir")
     parser.add_argument("--reidpath", type=str, default='reidLib', help="outputdir")
-    
+
     opt = parser.parse_args()
-    videoname = opt.videoname
-    output_dir = opt.outputdir
+    
+    videoname = os.path.join(opt.indir,opt.videoin)
+    output_dir = opt.outdir
     work_dir = opt.workdir
     reid_dir = opt.reiddir if opt.reiddir != "" else None
-    clean_folder(output_dir)
+    make_folder(output_dir)
     clean_folder(work_dir)
     clean_folder(reid_dir)
     
@@ -66,5 +72,5 @@ if __name__ == "__main__":
     
     save_video(work_dir, output_dir, filename="output.avi")
     
-    print(f"Video saved as {os.path.join(output_dir, output.avi)}")
+    print(f"Video saved as {os.path.join(output_dir, opt.outname)}")
     clear_folder(work_dir)
