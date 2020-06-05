@@ -113,19 +113,22 @@ class Detector():
     def save_pic_with_detections(self, img, detections, ids=None, title="image"):
         idx = 0
         filename = f'{self.output_dir}/{title}.png'
+        shape = img.shape
         
         for i, (x1, y1, x2, y2, conf, cls_conf, cls_pred) in enumerate(detections):
+            (x1, x2), (y1, y2) = self.clip(shape[1], x1, x2), self.clip(shape[0], y1, y2)
+
             box_w = x2 - x1
             box_h = y2 - y1
             if 0.45 * box_h > box_w > 10:
                 pedestrian = img[int(y1):int(y2), int(x1):int(x2), :]
-                cv2.rectangle(img, (x1,y1), (x2,y2), (0, 102, 255), 1)
                 if ids!=None:
                     col = color_list[ids[idx]%le]
-                    cv2.putText(img, f'{ids[idx]}', (x1, y1), cv2.FONT_HERSHEY_PLAIN, 1, col, 1)
-                    cv2.rectangle(img, (x1, y1), (x2, y2), col, 1)
+                    cv2.putText(img, f'{ids[idx]}', (x1, y2+1), cv2.FONT_HERSHEY_PLAIN, 1.33, col, thickness=2)
+                    cv2.rectangle(img, (x1, y1), (x2, y2), col, 1.33)
                     idx+=1
                 else:
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 102, 255), 1)
-
+                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 102, 255), 1.33)
+                    
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         cv2.imwrite(filename, img)

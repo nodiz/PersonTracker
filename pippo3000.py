@@ -16,7 +16,7 @@ if __name__ == "__main__":
     parser.add_argument("--yolopath", type=str, default='detLib', help="outputdir")
     parser.add_argument("--reidpath", type=str, default='reidLib', help="outputdir")
     parser.add_argument("--threshold", type=float, default=1, help="threshold for new identity")
-    parser.add_argument("--imgsize", type=float, default=960, help="imagesize for detection")
+    parser.add_argument("--imgsize", type=int, default=960, help="imagesize for detection")
 
     opt = parser.parse_args()
     videoname = opt.videoname
@@ -51,8 +51,9 @@ if __name__ == "__main__":
         det_ids = reid.evaluate_query(crop_list)
         detector.save_pic_with_detections(img, detections, det_ids, title=f"pic-{framenr:04}")
         print(f"Elaborating frame {framenr} freq: {1/(time.time() - start):.3}")
-        
+    
+    print("Processing finished, detaching video")
     videoframe.release()
     cv2.destroyAllWindows()
-
+    
     save_video(work_dir, output_dir, filename="output.avi")
