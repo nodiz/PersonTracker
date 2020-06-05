@@ -5,7 +5,7 @@ import time
 
 import cv2
 
-from dr_utils import clean_folder, clear_folder, make_folder, save_video
+from tools import clean_folder, clear_folder, make_folder, save_video
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -35,10 +35,10 @@ if __name__ == "__main__":
     clean_folder(reid_dir)
     
     sys.path.append(opt.yolopath)
-    from detect3000 import Detector
+    from detect import Detector
     
     detector = Detector(conf_thres=opt.detconf, yolo_path=opt.yolopath, resize_size=opt.imgsize, output_dir=work_dir)
-    from reid3000 import Reid
+    from reid import Reid
     
     reid = Reid(save_path=reid_dir, threshold=opt.threshold, verbose=False)
     

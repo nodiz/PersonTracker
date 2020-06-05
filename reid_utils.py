@@ -2,7 +2,7 @@ import os
 
 import torch
 
-from dr_utils import clean_folder
+from tools import clean_folder
 
 
 class Gallery:

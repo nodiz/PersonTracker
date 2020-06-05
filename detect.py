@@ -8,7 +8,7 @@ import torchvision.transforms as transforms
 from detLib.models import Darknet
 from detLib.utils.datasets import resize, pad_to_square
 from detLib.utils.utils import rescale_boxes, non_max_suppression
-from dr_utils import clean_folder
+from tools import clean_folder
 
 color_list = [(222, 98, 61), (160, 90, 105), (140, 82, 148), (107, 75, 148), (76, 67, 149), (50, 113, 149),
               (23, 159, 149), (76, 180, 109), (131, 204, 72), (187, 197, 71), (242, 190, 69)]
