@@ -124,11 +124,11 @@ class Detector():
                 pedestrian = img[int(y1):int(y2), int(x1):int(x2), :]
                 if ids!=None:
                     col = color_list[ids[idx]%le]
-                    cv2.putText(img, f'{ids[idx]}', (x1, y2+1), cv2.FONT_HERSHEY_PLAIN, 1.33, col, thickness=2)
-                    cv2.rectangle(img, (x1, y1), (x2, y2), col, 1.33)
+                    cv2.putText(img, f'{ids[idx]}', (x1, y2+1), cv2.FONT_HERSHEY_PLAIN, 1.1, col, thickness=1)
+                    cv2.rectangle(img, (x1, y1), (x2, y2), col, thickness=2)
                     idx+=1
                 else:
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 102, 255), 1.33)
+                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 102, 255), 2)
                     
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         cv2.imwrite(filename, img)

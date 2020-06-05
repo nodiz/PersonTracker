@@ -11,6 +11,8 @@ def clean_folder(folder_name):
         shutil.rmtree(folder_name)
     except OSError as e:
         pass
+    except TypeError:
+        return
     os.makedirs(folder_name, exist_ok=True)
 
 
