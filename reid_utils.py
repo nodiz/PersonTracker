@@ -1,44 +1,77 @@
 from torch.utils.data import Dataset
 from PIL import Image
+import torch
+import os
+
+from dr_utils import clean_folder
 
 
 class Gallery:
     
-    def __init__(self, **kwargs):
+    def __init__(self, save_path=None, **kwargs):
         self.lst = []
-        self.not_seen_param = kwargs.pop("not_seen_param", 30)
+        self.not_seen_param = kwargs.pop("not_seen_param", 15)
         self.limit = kwargs.pop("limit", 1000)
         self.idx = 0
-
+        
+        self.save_path = save_path
+    
     def __len__(self):
+        """how many unique elements"""
         return len(self.lst)
     
-    def append(self, features):
+    def find_item(self, item):
+        """could use get_item but might end up breaking something"""
+        for x in self.lst:
+            if x.idx == item:
+                return x
+    
+    @property
+    def len_act(self):
+        """len of active elements list"""
+        return sum([x.active for x in self.lst])
+    
+    def append(self, features, img=None):
         """append id to list"""
-        ReidEntity(self.idx, features)
+        self.lst.append(ReidEntity(self.idx, features))
+        
+        if img is not None:
+            clean_folder(os.path.join(self.save_path, f"id-{self.idx}/"))
+            img.save(os.path.join(self.save_path, f"id-{self.idx}/") + f"{self.lst[-1].cnt}.png")
+            self.lst[-1].cnt += 1
+        
         self.idx += 1
         
-        # remove unactive elements if too many
+        # delete unactive elements if too many
         if len(self) > self.limit:
             self.purge()
+            
+        return self.idx - 1
+    
+    def update(self, idx, features, img=None):
+        """ update id features """
+        item = self.find_item(idx)
+        
+        item.update_features(features)  # will also reset counters
+        
+        if img is not None:
+            clean_folder(os.path.join(self.save_path, f"id-{idx}/"))
+            img.save(os.path.join(self.save_path, f"id-{idx}/") + f"{item.cnt}.png")
+            self.lst[-1].cnt += 1
     
     def yield_active(self):
         """generate actives query"""
         for x in self.lst:
             if x.active:
-                yield x.features, x.id
+                yield x
     
-    def get_list_actives(self):
-        """get only active elements (feat+id)"""
-        return [x for x in self.yield_active()]
-    
-    def len_act(self):
-        """len of active elements list"""
-        return sum([x.active for x in self.lst])
-
-    def len(self):
-        """how many unique elements"""
-        return len(self.lst)
+    def get_gallery(self):
+        """get active elements (feat+id)"""
+        gf, ids = [], []
+        for person in self.yield_active():
+            gf.append(person.features)
+            ids.append(person.id)
+        return torch.stack(gf), ids
     
     def step(self):
         """unactivate old features"""
@@ -62,6 +95,7 @@ class ReidEntity:
         self.features = features  # 2048 features from backbone
         self.center = center  # position in the
         
+        self.cnt = 0
         self.active = True
         self.not_seen_since = 0
     
@@ -89,4 +123,3 @@ class ReidDataset(Dataset):
             img = self.transform(img)
         
         return img
-

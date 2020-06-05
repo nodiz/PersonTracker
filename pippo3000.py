@@ -42,8 +42,7 @@ if __name__ == "__main__":
         detections = detector.detect(img)
         det_list, crop_list = detector.get_detections(img, detections)
         det_ids = reid.evaluate_query(crop_list)
-        detector.save_pic_with_detections(img, detections, det_ids)
+        detector.save_pic_with_detections(img, detections, det_ids, title=f"pic-{framenr}")
         
-        break
     videoframe.release()
     cv2.destroyAllWindows()

@@ -16,36 +16,44 @@ class Reid:
                  baseline_path='reidLib/',
                  backbone="weights/reid//resnet50-19c8e357.pth",
                  num_classes=1041,
+                 threshold=0.5,
                  query_path=None,
+                 save_path=None,
                  verbose=False,
                  **kwargs):
         """init the reid"""
+        
         self.baseline_path = baseline_path
         sys.path.append(baseline_path)
         sys.path.append(os.path.join(baseline_path, 'modeling'))
+        
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = Baseline(num_classes, 1, backbone, 'bnneck', 'after', 'resnet50', 'imageNet')
         self.model.eval()
         self.model.to(self.device)
         
-        self.load_param()  # load parameters by default
+        self.load_param()  # TODO remove warnings
         self.load_transform()
         
-        self.gallery = Gallery()
+        self.gallery = Gallery(save_path)  # if savepath!=none we will create folder for identities (nice++)
+        self.save_path = save_path
         self.query = []
         
-        self.query_path = query_path
+        self.threshold = threshold  # threshold for new identity
+        
         self.verbose = verbose
     
     def load_param(self,
                    trained_path='weights/reid/resnet50_model_100.pth'):
         """load the parameters"""
-        
-        param_dict = torch.load(trained_path, map_location=self.device).state_dict()
-        for i in param_dict:
-            if 'classifier' in i:
-                continue
-            self.model.state_dict()[i].copy_(param_dict[i])
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            param_dict = torch.load(trained_path, map_location=self.device).state_dict()
+            for i in param_dict:
+                if 'classifier' in i:
+                    continue
+                self.model.state_dict()[i].copy_(param_dict[i])
     
     def load_transform(self):
         """transform for loading data"""
@@ -96,37 +104,61 @@ class Reid:
         """evluate query with in-cache gallery"""
         with torch.no_grad():
             if type(query)==list:
+                if self.save_path is not None:
+                    query_pics = [Image.fromarray(img) for img in query]
+    
                 query = self.get_query_from_list(query)
+                
             # Calculating feature for query
             start_time = time.time()
             
-            qf = self.model(query[:1,:,:,:])  # (bs, 2048)
-            
+            qf = self.model(query[:4,:,:,:])  # (bs, 2048)
+            qf = torch.nn.functional.normalize(qf, dim=1, p=2)  # probably dangerous to normalize since we have few elemtns, better to do it together with the gallery but more comexp
+
             if self.verbose:
-                print(f"--- %s seconds for {query.shape[0]} pics---" % (time.time() - start_time))
-                
-            if len(self.gallery) == 0:  # first passage
-                for x in qf:
-                    self.gallery.append(x)
-                return range(len(query))
-                
+                print(f"--- ReId: %s seconds for {qf.shape[0]}-{query.shape[0]} pics---" % (time.time() - start_time))
+
+            lq = len(query)
+            del query  # freeing some more space, big matrix is coming
+
             
-            qf = torch.nn.functional.normalize(qf, dim=1, p=2)
+            if len(self.gallery) == 0:  # if first passage
+                for i, x in enumerate(qf):
+                    self.gallery.append(x) if self.save_path is None else self.gallery.append(x, query_pics[i])
+                return range(lq)
             
-            m, n, gf, gf_id = self.query_length, self.gallery_length, self.get_gallery()
+            start_time = time.time()
+            m, n, (gf, gf_id) = qf.shape[0], self.gallery.len_act, self.gallery.get_gallery()
             
             distmat = torch.pow(qf, 2).sum(dim=1, keepdim=True).expand(m, n) + \
                       torch.pow(gf, 2).sum(dim=1, keepdim=True).expand(n, m).t()
             
             distmat.addmm_(1, -2, qf, gf.t())
             distmat = distmat.cpu().numpy()
-            
-            """now we have distmat, TODO:
-            - match label
-            - update gallery
-            - return matched labels
-            """
-            
-            raise NotImplementedError
 
+            # distmat: rows: querys, collums: gallery
+            # now we start the game
+            query_idx = [float('nan') for x in range(m)]
+            distmat = np.where(distmat < self.threshold, distmat, np.inf)
 
+            for ass in range(min(m,n)):
+                idx = np.unravel_index(np.argmin(distmat, axis=None), distmat.shape)
+                if distmat[idx] == np.inf:
+                    break  # no more association possible
+                else:  # make association
+                    query_idx[idx[1]] = gf_id[idx[0]]
+                    
+                    # deactivate element
+                    distmat[idx[0], :] = np.inf
+                    distmat[:, idx[1]] = np.inf
+    
+            #  finally check the not assigned and create new identities
+            for i, x in enumerate(qf):
+                if np.isnan(query_idx[i]):
+                    nid = self.gallery.append(x) if self.save_path is None else self.gallery.append(x, query_pics[i])
+                    query_idx[i] = nid
+
+            #  desactivate old values
+            self.gallery.step()
+            
+            return query_idx
