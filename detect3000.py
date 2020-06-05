@@ -10,7 +10,8 @@ from detLib.utils.utils import rescale_boxes, non_max_suppression
 
 from dr_utils import clean_folder
 
-color_list = [(222,98,61),(140,82,148),(76,67,149),(23,159,149),(131,204,72),(242,190,69)]
+color_list = [(222,98,61),(160,90,105),(140,82,148),(107,75,148),(76,67,149),(50,113,149),
+              (23,159,149),(76,180,109),(131,204,72),(187, 197, 71),(242,190,69)]
 le = len(color_list)
 
 class Detector():
@@ -66,11 +67,14 @@ class Detector():
         return detections
     
     def clip(self, taille, *args):
-        l = []
-        for x in args:
-            x = min(max(x, 0.01), taille-0.01)
-            l.append(torch.tensor(x))
-        return l
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            l = []
+            for x in args:
+                x = min(max(x, 0.01), taille-0.01)
+                l.append(torch.tensor(x))
+            return l
     
     def get_detections(self, img, detections):
         """get list of detected images"""
@@ -124,11 +128,11 @@ class Detector():
                 pedestrian = img[int(y1):int(y2), int(x1):int(x2), :]
                 if ids!=None:
                     col = color_list[ids[idx]%le]
-                    cv2.putText(img, f'{ids[idx]}', (x1, y2+1), cv2.FONT_HERSHEY_PLAIN, 1.1, col, thickness=1)
+                    cv2.putText(img, f'{ids[idx]}', (x1+1, y2-3), cv2.FONT_HERSHEY_SIMPLEX, 0.5, col, thickness=2)
                     cv2.rectangle(img, (x1, y1), (x2, y2), col, thickness=2)
                     idx+=1
                 else:
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 102, 255), 2)
+                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 102, 255), 1)
                     
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         cv2.imwrite(filename, img)
