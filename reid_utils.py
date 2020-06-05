@@ -53,7 +53,6 @@ class Gallery:
         item.update_features(features)  # will also reset counters
         
         if img is not None:
-            clean_folder(os.path.join(self.save_path, f"id-{idx}/"))
             img.save(os.path.join(self.save_path, f"id-{idx}/") + f"{item.cnt}.png")
             item.cnt += 1
     
@@ -68,7 +67,7 @@ class Gallery:
         gf, ids = [], []
         for person in self.yield_active():
             gf.append(person.features)
-            ids.append(person.id)
+            ids.append(person.idv)
         return torch.stack(gf), ids
     
     def step(self):
@@ -88,8 +87,8 @@ class Gallery:
 class ReidEntity:
     """gallery identity for reid"""
     
-    def __init__(self, id, features, center=(0, 0)):
-        self.idv = id  # identity number
+    def __init__(self, idv, features, center=(0, 0)):
+        self.idv = idv  # identity number
         self.features = features  # 2048 features from backbone
         self.center = center  # position in the
         

@@ -1,6 +1,7 @@
 import glob
 import os.path
 import shutil
+import argparse
 
 import cv2
 
@@ -28,3 +29,16 @@ def save_video(folder_in, folder_out, filename="video"):
     for i in range(len(img_array)):
         out.write(img_array[i])
     out.release()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--func", type=str, default='video', help="videoname")
+    opt = parser.parse_args()
+    
+    if opt.func == "video":
+        save_video("temp", "output", "ouput.avi")
+    elif opt.func == "clean":
+        clean_folder("temp")
+        clean_folder("output")
+        clean_folder("pippo")
