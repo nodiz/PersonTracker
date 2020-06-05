@@ -112,7 +112,8 @@ class Reid:
             # Calculating feature for query
             start_time = time.time()
             
-            qf = self.model(query[:4,:,:,:])  # (bs, 2048)
+            qf = self.model(query)  # (bs, 2048)
+            #qf = self.model(query[:1,:,:,:])  # (bs, 2048)
             qf = torch.nn.functional.normalize(qf, dim=1, p=2)  # probably dangerous to normalize since we have few elemtns, better to do it together with the gallery but more comexp
 
             if self.verbose:
