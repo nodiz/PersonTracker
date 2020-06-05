@@ -70,7 +70,7 @@ if __name__ == "__main__":
     videoframe.release()
     cv2.destroyAllWindows()
     
-    save_video(work_dir, output_dir, filename="output.avi")
+    save_video(work_dir, output_dir, filename=opt.outname)
     
     print(f"Video saved as {os.path.join(output_dir, opt.outname)}")
     clear_folder(work_dir)
