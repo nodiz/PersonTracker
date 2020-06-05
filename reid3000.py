@@ -150,7 +150,7 @@ class Reid:
                     break  # no more association possible
                 else:  # make association
                     query_idx[idx[0]] = gf_id[idx[1]]
-                    self.gallery.update(gf_id[idx[1]], qf[idx[0]]) if self.save_path is None else self.gallery.update(gf_id[idx[1]], qf[idx[0]])
+                    self.gallery.update(gf_id[idx[1]], qf[idx[0]]) if self.save_path is None else self.gallery.update(gf_id[idx[1]], qf[idx[0]], query_pics[idx[0]])
 
                     # deactivate element
                     distmat[idx[0], :] = np.inf

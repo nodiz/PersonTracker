@@ -101,15 +101,16 @@ class Detector():
         
     def save_pic_with_detections(self, img, detections, ids=None, title="image"):
         idx = 0
+        filename = f'{self.output_dir}/{title}.png'
+        
         for i, (x1, y1, x2, y2, conf, cls_conf, cls_pred) in enumerate(detections):
             box_w = x2 - x1
             box_h = y2 - y1
             if 0.45 * box_h > box_w > 10:
                 pedestrian = img[int(y1):int(y2), int(x1):int(x2), :]
-                filename = f'{self.output_dir}/{title}.png'
                 cv2.rectangle(img, (x1,y1), (x2,y2), (0, 102, 255), 1)
                 if ids!=None:
-                    col = color_list[idx%le]
+                    col = color_list[ids[idx]%le]
                     cv2.putText(img, f'{ids[idx]}', (x1, y1), cv2.FONT_HERSHEY_PLAIN, 1, col, 1)
                     cv2.rectangle(img, (x1, y1), (x2, y2), col, 1)
                     idx+=1

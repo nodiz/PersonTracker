@@ -5,7 +5,7 @@ import cv2
 import sys
 import time
 
-from dr_utils import clean_folder
+from dr_utils import clean_folder, save_video
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -48,8 +48,10 @@ if __name__ == "__main__":
         detections = detector.detect(img)
         det_list, crop_list = detector.get_detections(img, detections)
         det_ids = reid.evaluate_query(crop_list)
-        detector.save_pic_with_detections(img, detections, det_ids, title=f"pic-{framenr}")
+        detector.save_pic_with_detections(img, detections, det_ids, title=f"pic-{framenr:04}")
         print(f"Elaborating frame {framenr} freq: {1/(time.time() - start):.3}")
         
     videoframe.release()
     cv2.destroyAllWindows()
+
+    save_video(work_dir, output_dir, filename="output.avi")

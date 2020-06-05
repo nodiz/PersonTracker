@@ -8,7 +8,7 @@ class Gallery:
     
     def __init__(self, save_path=None, **kwargs):
         self.lst = []
-        self.not_seen_param = kwargs.pop("not_seen_param", 15)
+        self.not_seen_param = kwargs.pop("not_seen_param", 50)
         self.limit = kwargs.pop("limit", 1000)
         self.idx = 0
         
@@ -21,7 +21,7 @@ class Gallery:
     def find_item(self, item):
         """could use get_item but might end up breaking something"""
         for x in self.lst:
-            if x.idx == item:
+            if x.idv == item:
                 return x
     
     @property
@@ -55,7 +55,7 @@ class Gallery:
         if img is not None:
             clean_folder(os.path.join(self.save_path, f"id-{idx}/"))
             img.save(os.path.join(self.save_path, f"id-{idx}/") + f"{item.cnt}.png")
-            self.lst[-1].cnt += 1
+            item.cnt += 1
     
     def yield_active(self):
         """generate actives query"""
@@ -89,7 +89,7 @@ class ReidEntity:
     """gallery identity for reid"""
     
     def __init__(self, id, features, center=(0, 0)):
-        self.id = id  # identity number
+        self.idv = id  # identity number
         self.features = features  # 2048 features from backbone
         self.center = center  # position in the
         
