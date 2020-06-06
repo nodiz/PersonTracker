@@ -43,7 +43,7 @@ During processing the gallery identifications will be saved in the folder *g2* (
 
 ## Performance
 
-You can run 5 fps on a 512x512 image size. Changes in size cause variation in the detection speed which is the bottleneck.
+You can run 5 fps with a k80 GPU on a 512x512 image size. Changes in size cause variation in the detection speed which is the bottleneck.
 We are currently working to improve the speed.
 
 ## To-Do
