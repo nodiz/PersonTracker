@@ -1,7 +1,17 @@
 # PersonTracker
 
+Person tracking and with reidentification in a modular elastic framework.
 
-## How to:
+## Installation
+
+##### Requirements
+
+This repository is mantained for:
+* Python: 3.7
+* Pytorch: 1.4
+* CUDA: 10.1
+
+##### Setup 
 
 1. clone nodiz:[this](https://github.com/nodiz/det-reid) -> det-reid/
 
