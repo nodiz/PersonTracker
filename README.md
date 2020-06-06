@@ -6,6 +6,7 @@
 1. clone nodiz:this -> det-reid/
 
 `git clone https://github.com/nodiz/YOLOv3-pedestrian.git det-reid/`
+
 2. clone nodiz:yolo -> det-reid/detLib/
 
 `git clone https://github.com/nodiz/YOLOv3-pedestrian.git det-reid/detlib/`
@@ -19,17 +20,12 @@
 - weigths/reid/ : [backbone (resnet-ibn)](https://drive.google.com/file/d/1_r4wp14hEMkABVow58Xr4mPg7gvgOMto/view), [model](https://drive.google.com/drive/folders/1eq2Zpr2kn9FgAwpxDOl7eHaaHXa-m5lv?usp=sharing)
 - weights/det/ : [model](https://drive.google.com/drive/folders/1DRPNNJoIbM7utW-kDCdCFr7m4gZ0BVvo?usp=sharing)
 
-
-5. launch pippo3000.py
-
-6. ####have fun
-
+5. run pippo3000.py
 
 ## Example
 
 ```
 python pippo3000.py --imgsize 512 --videoin MOT16-11-raw.webm --outname v2.avi --reiddir g2
-
 ```
 
 Will process the video *vids/MOT16-11-raw.webm* and save output in *output/v2.avi*, eventually images will be converted to 512x512. 
