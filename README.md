@@ -3,15 +3,15 @@
 
 ## How to:
 
-1. clone nodiz:this -> det-reid/
+1. clone nodiz:[this](https://github.com/nodiz/det-reid) -> det-reid/
 
-`git clone https://github.com/nodiz/YOLOv3-pedestrian.git det-reid/`
+`git clone https://github.com/nodiz/det-reid.git det-reid/`
 
-2. clone nodiz:yolo -> det-reid/detLib/
+2. clone nodiz:[yolo](https://github.com/nodiz/YOLOv3-pedestrian) -> det-reid/detLib/
 
 `git clone https://github.com/nodiz/YOLOv3-pedestrian.git det-reid/detlib/`
 
-3. clone nodiz:reid -> det-reid/reidLib/
+3. clone nodiz:[reid](https://github.com/nodiz/reid-strong-baseline) -> det-reid/reidLib/
 
 `git clone https://github.com/nodiz/reid-strong-baseline.git det-reid/reidLib/`
 
