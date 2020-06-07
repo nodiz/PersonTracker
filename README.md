@@ -63,5 +63,7 @@ B. Reidentification
 C. Det+reid
 
 • make faster
+• make colab for demoing
 • tune the parameters better
-• find some nice applications
+• use for nice applications
+
