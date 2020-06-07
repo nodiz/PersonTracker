@@ -1,6 +1,6 @@
 # PersonTracker
 
-Person tracking and with reidentification in a modular elastic framework.
+Person tracking and reidentification in a modular minimal framework.
 
 ## Installation
 
