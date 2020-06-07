@@ -25,7 +25,7 @@ This repository is mantained for:
 
 `git clone https://github.com/nodiz/reid-strong-baseline.git det-reid/reidLib/`
 
-4. Copy weights -> [det-reid/weights/](https://drive.google.com/open?id=1NRmCg1s0nfCe3LW5Lb5t7gS9jdEryb_P) (access on request if not EPFL)
+4. Copy [weights](https://drive.google.com/open?id=1NRmCg1s0nfCe3LW5Lb5t7gS9jdEryb_P)  -> det-reid/weights/ (access on request if not EPFL)
 
 5. run pippo3000.py
 
