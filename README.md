@@ -2,6 +2,8 @@
 
 Person tracking and reidentification in a modular minimal framework.
 
+![Alt Text](demo/ezgif-7-19c9161a6d2d.gif)
+
 ## Installation
 
 ##### Requirements
